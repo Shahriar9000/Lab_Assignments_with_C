@@ -1,0 +1,40 @@
+// returns the larger of the two arguments
+int max( int x, int y)
+{
+  if( x > y ) 
+  {
+    return x;
+  } 
+  return y;
+}
+
+// returns the smaller of the two arguments
+int min( int x, int y)
+{
+  if( x < y ) 
+  {
+    return x;
+  } 
+  return y;
+}
+
+int scrambled( unsigned int a[], unsigned int b[], unsigned int len)
+{	 if (len == 0)
+	{ return 0;}
+	int sum_of_a=0;
+	int sum_of_b=0;
+	
+for ( int i=0; i < len ; i++)
+	
+{sum_of_a = sum_of_a + a[i];}
+	
+for ( int j=0; j < len ; j++)
+	
+{sum_of_b = sum_of_b + b[j];}
+	
+	if (sum_of_a == sum_of_b)
+	{ return 1;}
+	else
+	{ return 0;}
+}
+

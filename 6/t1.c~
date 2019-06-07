@@ -1,0 +1,160 @@
+/*#include <assert.h>
+ #include <stdint.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+ #include <math.h>
+ 
+
+#include "intarr.h"
+
+int intarr_save_binary( intarr_t* ia, const char* filename )
+{
+    int returnValue = 0;
+    unsigned int len = ia->len;
+    FILE *f;
+
+    if( NULL == (f = fopen (filename, "wb") ))
+    {
+        perror( "fopen failed" );
+        returnValue = 1;
+    }
+
+    else if ( fwrite ( &len, sizeof(int), 1, f) == 1 )
+    { // then write of length successful
+
+        if (fwrite (ia->data, sizeof(int), len, f) == len)
+        {
+            returnValue = 0; // indicate success
+        }
+
+        else
+        { // else, write of data failed
+            returnValue = 3;
+        }
+    }
+    else
+    { // else, failed to write len value to file
+        returnValue = 4;
+    }
+
+    fclose( f ); // cleanup (writes last buffer to file)
+    return( returnValue );
+} // end function: intarr_save_binary
+
+
+
+intarr_t* intarr_load_binary( const char* filename )
+{
+    unsigned int len = 0;
+    FILE *f = NULL;
+    intarr_t* newia = NULL;
+
+    if( NULL == (f = fopen (filename, "rb")) )
+    { // then, fopen failed
+        perror( "fopen failed" );
+        exit( EXIT_FAILURE );
+    } // end if
+
+    // implied else, fopen successful
+
+    if( NULL == (newia = malloc (sizeof(intarr_t)))){
+        perror( "malloc failed" );
+        fclose(f);
+        exit( EXIT_FAILURE );
+    } // end if
+
+    // implied else, malloc successful
+
+    if( (fread (&len, sizeof(int), 1, f) != 1 ) )
+    { // then fread failed
+        perror( "fread failed" );
+        fclose(f);
+        free( newia );
+        exit( EXIT_FAILURE );
+    } // end if
+
+    // implied else, fread for len successful
+
+    newia->len = len;
+
+    if( NULL == (newia->data = malloc (len*sizeof(int)) ) )
+    { // then malloc failed
+        perror( "malloc failed" );
+        fclose(f);
+        free( newia );
+        exit( EXIT_FAILURE );
+    } // end if
+
+    // implied else, malloc successful
+
+    if( fread( newia->data, sizeof(int), len, f ) != len )
+    { // then, fread failed
+        perror( "fread failed" );
+        fclose(f);
+        free(newia->data);
+        free(newia);
+        exit( EXIT_FAILURE );
+    } // end if
+
+    // implied else, fread successful
+
+    fclose (f);
+    return newia;
+}*/ 
+
+#include <stdint.h> // for uint8_t 
+#include <stdlib.h> // for malloc() 
+#include <string.h> // for memset() 
+#include <stdio.h> 
+#include <math.h> 
+#include <assert.h> 
+#include "intarr.h" 
+/* LAB 6 TASK 1 */ /*   Save the entire array ia into a file called 'filename' in (a binary   file format) that can be loaded by intarr_load_binary(). Returns   zero on success, or a non-zero error code on failure. Arrays of   length 0 should produce an output file containing an empty array. */ 
+
+int intarr_save_binary( intarr_t* ia, const char* filename ) 
+{ 	if (ia == NULL) 
+	{ 	
+		return 1; 	
+	}     
+	FILE* f = fopen(filename,"a");     	
+	if( f == NULL )     
+	{       
+		return 1;     
+	} 	
+	int len = ia->len; 	
+	if (fwrite(&len , sizeof(int), 1, f) != 1) 
+	{ 		
+		return 1; 	
+	} 		
+	if ( fwrite(ia->data, sizeof(int), len, f) != len ) 
+	{ 		
+		return 1; 	
+	} 	
+	fclose(f); 	
+	return 0; 
+} 
+
+intarr_t* intarr_load_binary( const char* filename ) 
+{	FILE *f = fopen( filename, "b");     	
+	int len; 	
+	if(f == NULL) 
+	{ 		
+		return NULL; 	
+	} 		
+	if (fread( &len , sizeof(int) , 1 , f) != 1) 
+	{ 		
+		return NULL; 	
+	} 	
+	intarr_t* new = intarr_create(len); 
+	
+	if (new == NULL)
+	{ return NULL;}	
+
+	if (fread(new->data, sizeof(int) , len , f) != len) 
+	{ 	return NULL; 	} 	
+	return new; //i have to return a pointer to the new array i created from the file. 
+}
+
+
+
